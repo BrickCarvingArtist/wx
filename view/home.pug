@@ -2,7 +2,7 @@ doctype
 html
 	head
 		meta(charset="utf-8")
-		meta(name="viewport", content="width=640, height=1136, user-scalable=no")
+		meta(name="viewport", content="width=640, user-scalable=no")
 		meta(http-equiv="X-UA-Compatible", content="IE=edge, chrome=1")
 		meta(name="keywords" content="ikindness, 砖雕艺术家, 砖雕艺术馆, 前端, 前端开发, 前端培训")
 		meta(name="description" content=title)
@@ -12,8 +12,11 @@ html
 			link(rel="stylesheet", href=i)
 		title!= title
 	body
-		<div style="width:640px;height:40px;font-size:20px;background-color:red">
-			<a>a测试</a>
-		</div>
+		<header>
+			<a class="icon icon-bg back"></a>
+			<h1>标题</h1>
+			<a class="icon icon-bg option"></a>
+		</header>
+		<div class="demo" draggable="true">123</div>
 		each i in script
 			script(src=i)

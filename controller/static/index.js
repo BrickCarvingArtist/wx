@@ -4,8 +4,8 @@ const Corp = "-砖雕艺术馆",
 			route : "/",
 			callback(req, res){
 				res.render("./home", {
-					style : [],
-					script : [],
+					style : ["./css/home.css"],
+					script : ["./js/home.js"],
 					title : `首页${Corp}`
 				});
 			}

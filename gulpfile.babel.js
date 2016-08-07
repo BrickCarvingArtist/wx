@@ -3,16 +3,18 @@ import stylus from "gulp-stylus";
 import uglify from "gulp-uglify";
 const path = {
 	stylus : "./dev_resource/stylus/*.styl",
-	js : "./dev_resource/js/*.js"
+	script : "./dev_resource/js/*.js"
 };
 gulp.task("stylus", () => {
 	return gulp.src(path.stylus).pipe(stylus({
 		compress : 1
 	})).pipe(gulp.dest("./resource/css"));
 });
-gulp.task("js", () => {
-	return gulp.src(path.js).pipe(uglify()).pipe(gulp.dest("./resource/js"));
+gulp.task("script", () => {
+	return gulp.src(path.script).pipe(uglify()).pipe(gulp.dest("./resource/js"));
 });
-gulp.task("default", ["js", "stylus"], () => {
-	gulp.watch(["./dev_resource/**/*"], ["js", "stylus"]);
+gulp.task("watch", () => {
+	gulp.watch(path.stylus, ["stylus"]);
+	gulp.watch(path.script, ["script"]);
 });
+gulp.task("default", ["watch", "stylus", "script"]);
