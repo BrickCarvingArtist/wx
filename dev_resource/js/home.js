@@ -130,7 +130,6 @@ function Banner(option){
 		button = document.createElement("em");
 		button.appendChild(document.createTextNode(index + 1));
 		button.addEventListener("touchstart", function(e){
-			e.stopPropagation();
 			clearInterval(timer);
 		})
 		button.addEventListener("touchend", function(){
@@ -158,11 +157,11 @@ function Banner(option){
 	function autoSlide(){
 		return setInterval(function(){
 			setIndex(getIndex(1));
-		}, 6000);
+		}, 4000);
 	}
 	function init(){
 		position.appendChild(createDOM());
-		arrAd[currentIndex].getDOM().classList.add("current");
+		arrAd[currentIndex].getDOM().style.left = 0;
 		arrButton[currentIndex].classList.add("current");
 		timer = autoSlide();
 	}
