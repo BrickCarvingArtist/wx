@@ -32,77 +32,14 @@ function Banner(option){
 		var dom = document.createElement("a"),
 			start,
 			end,
-			mode;
-		option.index || dom.classList.add("current");
-		dom.href = option.anchorHref;
-		dom.style.backgroundImage = "url(" + option.imageUrl + ")";
-		dom.title = option.name;
-		slide(dom);
-		this.getDOM = function(){
-			return dom;
-		};
-	}
-	function createDOM(){
-		var fragment = document.createDocumentFragment(),
-			banner = document.createDocumentFragment(),
-			ad,
-			indicator = document.createElement("div"),
-			button;
-		indicator.className = "indicator";
-		option.map(function(list, index){
-			arrAd.push(createBanner(banner, ad, Object.assign({
-				index : index
-			}, list)));
-			arrButton.push(createIndicatorButton(indicator, button, index));
-		});
-		fragment.appendChild(banner);
-		fragment.appendChild(indicator);
-		return fragment;
-	}
-	function createBanner(banner, ad, option){
-		ad = new Ad(option);
-		banner.appendChild(ad.getDOM());
-		return ad;
-	}
-	function createIndicatorButton(indicator, button, index){
-		button = document.createElement("em");
-		button.appendChild(document.createTextNode(index + 1));
-		index || button.classList.add("current");
-		button.addEventListener("touchstart", function(){
-			clearInterval(timer);
-		})
-		button.addEventListener("touchend", function(){
-			timer = autoSlide();
-			setIndex(index);
-		}, 0);
-		indicator.appendChild(button);
-		return button;
-	}
-	function getIndex(type){
-		return [(currentIndex > 0 ? currentIndex : length) - 1, currentIndex < length - 1 ? currentIndex + 1 : 0][type];
-	}
-	function setIndex(index, mode){
-		previousIndex = currentIndex;
-		currentIndex = index;
-		nextIndex = getIndex(currentIndex, 1);
-		if(mode){
-
-		}else{
-			arrAd[previousIndex].getDOM().classList.remove("current");
-			arrAd[previousIndex].getDOM().classList.add("previous");
-			arrAd[currentIndex].getDOM().classList.add("current");
-		}
-		arrButton[previousIndex].classList.remove("current");
-		arrButton[currentIndex].classList.add("current");
-	}
-	function slide(dom){
-		var start,
-			end,
 			direction,
 			distance,
 			mode,
 			animationName,
 			shouldChangeIndex;
+		dom.href = option.anchorHref;
+		dom.style.backgroundImage = "url(" + option.imageUrl + ")";
+		dom.title = option.name;
 		dom.addEventListener("touchstart", function(e){
 			clearInterval(timer);
 			this.classList.remove("current");
@@ -113,9 +50,11 @@ function Banner(option){
 			direction = distance < 0;
 			dom.style.left = distance + "px";
 			if(direction){
+				arrAd[getIndex(0)].getDOM().style.left = null;
 				arrAd[getIndex(1)].getDOM().style.left = width + distance + "px";
 			}else{
 				arrAd[getIndex(0)].getDOM().style.left = distance - width + "px";
+				arrAd[getIndex(1)].getDOM().style.left = null;
 			}
 		}, 0);
 		dom.addEventListener("touchend", function(e){
@@ -155,14 +94,72 @@ function Banner(option){
 			}
 			shouldChangeIndex = 0;
 		});
+		this.getDOM = function(){
+			return dom;
+		};
+	}
+	function createDOM(){
+		var fragment = document.createDocumentFragment(),
+			banner = document.createDocumentFragment(),
+			ad,
+			indicator = document.createElement("div"),
+			button;
+		indicator.className = "indicator";
+		option.map(function(list, index){
+			arrAd.push(createBanner(banner, ad, Object.assign({
+				index : index
+			}, list)));
+			arrButton.push(createIndicatorButton(indicator, button, index));
+		});
+		fragment.appendChild(banner);
+		fragment.appendChild(indicator);
+		return fragment;
+	}
+	function createBanner(banner, ad, option){
+		ad = new Ad(option);
+		banner.appendChild(ad.getDOM());
+		return ad;
+	}
+	function createIndicatorButton(indicator, button, index){
+		button = document.createElement("em");
+		button.appendChild(document.createTextNode(index + 1));
+		button.addEventListener("touchstart", function(){
+			clearInterval(timer);
+		})
+		button.addEventListener("touchend", function(){
+			timer = autoSlide();
+			setIndex(index);
+		}, 0);
+		indicator.appendChild(button);
+		return button;
+	}
+	function getIndex(type){
+		return [(currentIndex > 0 ? currentIndex : length) - 1, currentIndex < length - 1 ? currentIndex + 1 : 0][type];
+	}
+	function setIndex(index, mode){
+		previousIndex = currentIndex;
+		currentIndex = index;
+		nextIndex = getIndex(currentIndex, 1);
+		if(!mode){
+			arrAd[previousIndex].getDOM().classList.remove("current");
+			arrAd[previousIndex].getDOM().classList.add("previous");
+			arrAd[currentIndex].getDOM().classList.add("current");
+		}
+		arrButton[previousIndex].classList.remove("current");
+		arrButton[currentIndex].classList.add("current");
 	}
 	function autoSlide(){
 		return setInterval(function(){
 			setIndex(getIndex(1));
 		}, 6000);
 	}
-	position.appendChild(createDOM());
-	timer = autoSlide();
+	function init(){
+		position.appendChild(createDOM());
+		arrAd[currentIndex].getDOM().classList.add("current");
+		arrButton[currentIndex].classList.add("current");
+		timer = autoSlide();
+	}
+	init();
 }
 var banner = document.querySelector(".banner");
 ajax({
