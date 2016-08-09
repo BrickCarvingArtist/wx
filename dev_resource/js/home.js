@@ -105,7 +105,6 @@ function Banner(option){
 			shouldChangeIndex;
 		dom.addEventListener("touchstart", function(e){
 			clearInterval(timer);
-			shouldChangeIndex = 0;
 			this.classList.remove("current");
 			start = e.touches[0].clientX;
 		}, 0);
@@ -154,6 +153,7 @@ function Banner(option){
 					shouldChangeIndex && setIndex(getIndex(1), 1);
 				}
 			}
+			shouldChangeIndex = 0;
 		});
 	}
 	function autoSlide(){
