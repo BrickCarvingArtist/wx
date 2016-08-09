@@ -30,10 +30,13 @@ function Banner(option){
 		timer;
 	function Ad(option){
 		var dom = document.createElement("a"),
-			start,
-			end,
+			startX,
+			startT,
+			endX,
+			endT,
 			direction,
 			distance,
+			duration,
 			mode,
 			animationName,
 			shouldChangeIndex;
@@ -43,10 +46,11 @@ function Banner(option){
 		dom.addEventListener("touchstart", function(e){
 			clearInterval(timer);
 			this.classList.remove("current");
-			start = e.touches[0].clientX;
+			startX = e.touches[0].clientX;
+			startT = Date.now();
 		}, 0);
 		dom.addEventListener("touchmove", function(e){
-			distance = e.touches[0].clientX - start;
+			distance = e.touches[0].clientX - startX;
 			direction = distance < 0;
 			dom.style.left = distance + "px";
 			if(direction){
@@ -58,18 +62,20 @@ function Banner(option){
 			}
 		}, 0);
 		dom.addEventListener("touchend", function(e){
-			end = e.changedTouches[0].clientX;
-			distance = end - start;
+			endX = e.changedTouches[0].clientX;
+			endT = Date.now();
+			distance = endX - startX;
 			direction = distance > 0;
 			distance = Math.abs(distance);
-			if(distance < width / 2){
+			duration = endT - startT;
+			if(distance < width / 2 && duration >= 300){
 				if(direction){
 					arrAd[getIndex(0)].getDOM().classList.add("rtl");
 				}else{
 					arrAd[getIndex(1)].getDOM().classList.add("ltr");
 				}
 				mode = "init";
-			}else if(direction && distance >= width / 2){
+			}else if(direction && (distance >= width / 2 || duration < 300)){
 				arrAd[getIndex(0)].getDOM().classList.add("init");
 				mode = "ltr";
 				shouldChangeIndex = 1;

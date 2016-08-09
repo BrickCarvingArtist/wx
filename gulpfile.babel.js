@@ -1,5 +1,6 @@
 import gulp from "gulp";
 import stylus from "gulp-stylus";
+import uglify from "gulp-uglify";
 const path = {
 	stylus : "./dev_resource/stylus/*.styl",
 	script : "./dev_resource/js/*.js"
@@ -10,7 +11,7 @@ gulp.task("stylus", () => {
 	})).pipe(gulp.dest("./resource/css"));
 });
 gulp.task("script", () => {
-	return gulp.src(path.script).pipe(gulp.dest("./resource/js"));
+	return gulp.src(path.script).pipe(uglify()).pipe(gulp.dest("./resource/js"));
 });
 gulp.task("watch", () => {
 	gulp.watch(path.stylus, ["stylus"]);
