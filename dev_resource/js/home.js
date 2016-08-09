@@ -129,7 +129,8 @@ function Banner(option){
 	function createIndicatorButton(indicator, button, index){
 		button = document.createElement("em");
 		button.appendChild(document.createTextNode(index + 1));
-		button.addEventListener("touchstart", function(){
+		button.addEventListener("touchstart", function(e){
+			e.stopPropagation();
 			clearInterval(timer);
 		})
 		button.addEventListener("touchend", function(){
