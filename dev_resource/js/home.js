@@ -1,21 +1,33 @@
 "use strict";
-document.documentElement.style.fontSize = window.innerWidth / 16 + "px";
+document.documentElement.style.fontSize = window.innerWidth / 20 + "px";
 function ajax(option){
+	function queryString(object){
+		var arrQuery = [];
+		for(var i in object){
+			arrQuery.push("&" + i + "=" + object[i]);
+		}
+		return arrQuery.join("").slice(1);
+	}
 	var xhr = new XMLHttpRequest(),
-		_this = this;
-	xhr.open(option.type || "get", option.url, option.asnyc || 1);
-	option.data && xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		type = option.type,
+		dataType = option.dataType,
+		strQuery = queryString(option.data),
+		readyState = [],
+		success = option.success,
+		error = option.error;
 	xhr.onreadystatechange = function(){
 		if(xhr.readyState === 4){
-			var responseText = option.dataType && option.dataType === "text" ? xhr.responseText : JSON.parse(xhr.responseText);
+			var responseText = dataType && dataType === "text" ? xhr.responseText : JSON.parse(xhr.responseText);
 			if(xhr.status === 200){
-				option.success && option.success(responseText);
+				typeof success === "function" && success(responseText);
 			}else{
-				option.fail && option.fail(responseText);
+				typeof error === "function" && error(responseText);
 			}
 		}
 	};
-	xhr.send(option.data || null);
+	xhr.open(type || "get", option.url + (type === "post" ? "" : strQuery ? "?" + strQuery : ""), option.asnyc || 1);
+	strQuery && type === "post" && xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xhr.send(strQuery || null);
 }
 function Banner(option){
 	var position = option.position,
