@@ -13,21 +13,36 @@ function ajax(option){
 		dataType = option.dataType,
 		strQuery = queryString(option.data),
 		readyState = [],
-		success = option.success,
-		error = option.error;
-	xhr.onreadystatechange = function(){
-		if(xhr.readyState === 4){
-			var responseText = dataType && dataType === "text" ? xhr.responseText : JSON.parse(xhr.responseText);
-			if(xhr.status === 200){
-				typeof success === "function" && success(responseText);
-			}else{
-				typeof error === "function" && error(responseText);
-			}
+		loadingFunction = option.loading,
+		successFunction = option.success,
+		errorFunction = option.error;
+	function loading(readyState){
+		typeof loadingFunction === "function" && loadingFunction(readyState);
+	}
+	function success(responseText){
+		typeof successFunction === "function" && successFunction(responseText);
+	}
+	function error(responseText){
+		typeof errorFunction === "function" && errorFunction(responseText);
+	}
+	function afterOpen(){}
+	function afterSend(){}
+	function beforeGet(){}
+	function alreadyGet(){
+		var responseText = dataType && dataType === "text" ? xhr.responseText : JSON.parse(xhr.responseText);
+		if(xhr.status === 200){
+			success(responseText);
+		}else{
+			error(responseText);
 		}
+	}
+	xhr.onreadystatechange = function(){
+		loading(xhr.readyState);
+		[, afterOpen, afterSend, beforeGet, alreadyGet][xhr.readyState]();
 	};
 	xhr.open(type || "get", option.url + (type === "post" ? "" : strQuery ? "?" + strQuery : ""), option.asnyc || 1);
 	strQuery && type === "post" && xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhr.send(strQuery || null);
+	xhr.send(strQuery && type === "post" ? strQuery : null);
 }
 function Banner(option){
 	var position = option.position,
@@ -179,7 +194,8 @@ function Banner(option){
 	}
 	init();
 }
-var banner = document.querySelector(".banner");
+var banner = document.querySelector(".banner"),
+	loading = document.querySelector(".loading");
 ajax({
 	url : "http://www.ikindness.cn/api/test/get",
 	success : function(data){
@@ -187,5 +203,9 @@ ajax({
 			position : banner,
 			option : data.data
 		});
+	},
+	loading : function(readyState){
+		readyState >> 1  && loading.classList.remove("step" + (readyState - 1));
+		loading.classList.add("step" + readyState);
 	}
 });

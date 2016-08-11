@@ -22,6 +22,22 @@ header
 		color white
 		font-size 1.2rem
 		line-height 3rem
+.loading
+	position fixed
+	top 3rem
+	width 0
+	border-bottom .2rem solid rgb(0, 128, 64)
+	transition width .25s
+	&.step1
+		width 5rem
+	&.step2
+		width 10rem
+	&.step3
+		width 15rem
+	&.step4
+		width 20rem
+		border-width 0
+		transition border-width 2s
 body
 	padding-top 2rem
 	font-size 1rem

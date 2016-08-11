@@ -1,4 +1,4 @@
-const Corp = "-砖雕艺术馆",
+const Corp = "砖雕艺术馆",
 	Enum = [
 		{
 			route : "/",
@@ -6,6 +6,8 @@ const Corp = "-砖雕艺术馆",
 				res.render("./home", {
 					style : ["./css/home.css"],
 					script : ["./js/home.js"],
+					keywords : ["微信", "移动端", "手机端", "砖雕艺术馆", "ikindness"].join(", "),
+					description : "砖雕艺术馆前端培训，砖雕艺术家的个人站",
 					title : `首页${Corp}`
 				});
 			}
