@@ -16,10 +16,10 @@ const Corp = "砖雕艺术馆",
 			route : "/random",
 			callback(req, res){
 				res.render("./random", {
-					style : [],
-					script : [],
-					keywords : ["抽奖", "点名"].join(", "),
-					description : "",
+					style : ["./css/random.css"],
+					script : ["./js/random.js"],
+					keywords : ["抽奖", "点名", "砖雕艺术馆", "ikindness"].join(", "),
+					description : "砖雕艺术馆前端培训，砖雕艺术家的个人站",
 					title : `点名系统V0.0.2 beta${Corp}`
 				});
 			}
